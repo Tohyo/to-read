@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Service\OpenGraph;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,12 +21,12 @@ class ToReadController extends AbstractController
     }
 
     #[Route('/articles', name: 'app_to_read_articles', methods: ['POST'])]
-    public function pastes(Request $request, ArticleRepository $articleRepository): Response
+    public function pastes(Request $request, ArticleRepository $articleRepository, OpenGraph $openGraph): Response
     {
         $data = json_decode($request->getContent(), true);
 
         $article = new Article(
-            $data['url'],
+            $openGraph($data['url'])['title'],
             $data['url']
         );
 
