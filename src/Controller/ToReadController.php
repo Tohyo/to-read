@@ -4,16 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
-use App\Service\OpenGraph;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Tohyo\OpenGraphBundle\OpenGraph;
 
 class ToReadController extends AbstractController
 {
     #[Route('/', name: 'app_to_read')]
-    public function index(ArticleRepository $articleRepository): Response
+    public function index(ArticleRepository $articleRepository, OpenGraph $openGraph): Response
     {
         return $this->render('to_read/index.html.twig', [
             'articles' => $articleRepository->findAll(),
@@ -25,9 +25,10 @@ class ToReadController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
+        $openGraphData = $openGraph->getData($data['url']);
         $article = new Article(
-            $openGraph($data['url'])['title'],
-            $data['url']
+            $openGraphData->title,
+            $openGraphData->url
         );
 
         $articleRepository->save($article, true);

@@ -285,6 +285,9 @@
             "webpack.config.js"
         ]
     },
+    "tohyo/open-graph-bundle": {
+        "version": "dev-main"
+    },
     "twig/extra-bundle": {
         "version": "v3.6.1"
     }
