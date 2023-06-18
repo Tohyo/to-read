@@ -12,11 +12,12 @@ use Tohyo\OpenGraphBundle\OpenGraph;
 
 class ToReadController extends AbstractController
 {
-    #[Route('/', name: 'app_to_read')]
-    public function index(ArticleRepository $articleRepository): Response
+    #[Route('/{status}', name: 'app_to_read', methods: ['GET'], defaults: ['status' => Article::TO_READ], requirements: ['status' => '\d+'])]
+    public function index(ArticleRepository $articleRepository, int $status): Response
     {
         return $this->render('to_read/index.html.twig', [
-            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
+            'articles' => $articleRepository->findBy(['status' => $status]),
+            'tab' => $status
         ]);
     }
 
@@ -38,6 +39,7 @@ class ToReadController extends AbstractController
 
         return $this->render('to_read/index.html.twig', [
             'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
+            'tab' => Article::TO_READ
         ]);
     }
 }
