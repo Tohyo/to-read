@@ -21,7 +21,7 @@ class ArchiveStalledScheduleProvider implements ScheduleProviderInterface
     {
         return (new Schedule())->add(
             RecurringMessage::every(
-                '10 seconds',
+                '1 day',
                 new ArchiveStalledArticles(
                     $this->articleRepository->findBy(['status' => Article::TO_READ ])
                 )
