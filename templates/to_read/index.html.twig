@@ -4,8 +4,12 @@
 
 {% block body %}
 <div data-controller="paste">
+    <ul class="list-none">
     {% for article in articles %}
-        <a href="{{ article.url }}">{{ article.title }}</a>
+        <li>
+            <a href="{{ article.url }}">{{ article.title }}</a>
+        </li>
     {% endfor %}
+    </ul>
 </div>
 {% endblock %}
