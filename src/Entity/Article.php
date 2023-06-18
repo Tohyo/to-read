@@ -24,6 +24,12 @@ class Article
         public string $title,
 
         #[ORM\Column(length: 255)]
-        public string $url
+        public string $url,
+
+        #[ORM\Column(length: 255, nullable: true)]
+        public string $imageUrl,
+
+        #[ORM\Column(type: "text", nullable: true)]
+        public string $description
     ) {}
 }

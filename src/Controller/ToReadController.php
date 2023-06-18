@@ -13,7 +13,7 @@ use Tohyo\OpenGraphBundle\OpenGraph;
 class ToReadController extends AbstractController
 {
     #[Route('/', name: 'app_to_read')]
-    public function index(ArticleRepository $articleRepository, OpenGraph $openGraph): Response
+    public function index(ArticleRepository $articleRepository): Response
     {
         return $this->render('to_read/index.html.twig', [
             'articles' => $articleRepository->findAll(),
@@ -26,9 +26,12 @@ class ToReadController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $openGraphData = $openGraph->getData($data['url']);
+
         $article = new Article(
             $openGraphData->title,
-            $openGraphData->url
+            $data['url'],
+            $openGraphData->image->url,
+            $openGraphData->description
         );
 
         $articleRepository->save($article, true);
