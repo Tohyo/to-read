@@ -11,6 +11,8 @@ class Article
     public const TO_READ = 1;
     public const READ = 2;
 
+    public const ARCHIVED = 3;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

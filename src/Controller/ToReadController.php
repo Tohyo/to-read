@@ -16,7 +16,7 @@ class ToReadController extends AbstractController
     public function index(ArticleRepository $articleRepository): Response
     {
         return $this->render('to_read/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
         ]);
     }
 
@@ -37,7 +37,7 @@ class ToReadController extends AbstractController
         $articleRepository->save($article, true);
 
         return $this->render('to_read/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
         ]);
     }
 }
