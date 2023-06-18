@@ -42,4 +42,16 @@ class ToReadController extends AbstractController
             'tab' => Article::TO_READ
         ]);
     }
+
+    #[Route('/read/{id}', name: 'app_read_article')]
+    public function read(Article $article, ArticleRepository $articleRepository): Response
+    {
+        $article->status = Article::READ;
+        $articleRepository->save($article, true);
+
+        return $this->render('to_read/index.html.twig', [
+            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
+            'tab' => Article::TO_READ
+        ]);
+    }
 }
