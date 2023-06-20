@@ -25,7 +25,7 @@ final class Version20230619180115 extends AbstractMigration
             "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQL100Platform'."
         );
 
-        $this->addSql('CREATE TABLE article (id INT NOT NULL, status INT NOT NULL, title VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, image_url VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE article (id BIGSERIAL NOT NULL, status INT NOT NULL, title VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, image_url VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, PRIMARY KEY(id))');
         $this->abortIf(
             !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQL100Platform,
             "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQL100Platform'."
