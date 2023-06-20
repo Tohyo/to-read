@@ -32,7 +32,7 @@ class ToReadController extends AbstractController
             $openGraphData->title,
             $data['url'],
             $openGraphData->image->url,
-            $openGraphData->description
+            $openGraphData->description ?? ''
         );
 
         $articleRepository->save($article, true);
