@@ -29,9 +29,9 @@ class ToReadController extends AbstractController
         $openGraphData = $openGraph->getData($data['url']);
 
         $article = new Article(
-            $openGraphData->title,
+            $openGraphData->title ?? $data['url'],
             $data['url'],
-            $openGraphData->image->url,
+            $openGraphData->image->url ?? '',
             $openGraphData->description ?? ''
         );
 
