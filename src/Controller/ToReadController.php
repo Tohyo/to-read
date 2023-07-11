@@ -54,4 +54,15 @@ class ToReadController extends AbstractController
             'tab' => Article::TO_READ
         ]);
     }
+
+    #[Route('/delete/{id}', name:'app_delete_article')]
+    public function delete(Article $article, ArticleRepository $articleRepository): Response
+    {
+        $articleRepository->remove($article, true);
+
+        return $this->render('to_read/index.html.twig', [
+            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
+            'tab' => Article::TO_READ
+        ]);
+    }
 }

@@ -15,7 +15,7 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    public readonly ?int $id;
+    private ?int $id;
 
     #[ORM\Column]
     public int $status = self::TO_READ;
@@ -33,4 +33,9 @@ class Article
         #[ORM\Column(type: "text", nullable: true)]
         public string $description
     ) {}
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }

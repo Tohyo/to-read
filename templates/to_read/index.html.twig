@@ -48,8 +48,11 @@
                 <button class="bg-blue-600 p-3 rounded-md text-white">
                     <a href="{{ article.url }}" target="_blank">Voir l'article</a>
                 </button>
-                <button class="bg-red-600 p-3 rounded-md text-white">
+                <button class="bg-green-600 p-3 rounded-md text-white">
                     <a href="{{ path('app_read_article', { id: article.id }) }}">J'ai lu</a>
+                </button>
+                <button class="bg-red-600 p-3 rounded-md text-white">
+                    <a href="{{ path('app_delete_article', { id: article.id }) }}">Supprimer</a>
                 </button>
             </div>
         </li>
