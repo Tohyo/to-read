@@ -17,9 +17,6 @@ class Article
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column]
-    public int $status = self::TO_READ;
-
     public function __construct(
         #[ORM\Column(length: 255)]
         public string $title,
@@ -31,7 +28,10 @@ class Article
         public string $imageUrl,
 
         #[ORM\Column(type: "text", nullable: true)]
-        public string $description
+        public string $description,
+
+        #[ORM\Column]
+        public int $status = self::TO_READ
     ) {}
 
     public function getId(): ?int
