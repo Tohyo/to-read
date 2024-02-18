@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Category;
+use App\Form\CategoryType;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,12 +16,42 @@ use Tohyo\OpenGraphBundle\OpenGraph;
 
 class ToReadController extends AbstractController
 {
-    #[Route('/{status}', name: 'app_to_read', methods: ['GET'], defaults: ['status' => Article::TO_READ], requirements: ['status' => '\d+'])]
-    public function index(ArticleRepository $articleRepository, int $status): Response
-    {
+    #[Route('/', name: 'app_to_read')]
+    public function index(
+        Request $request,
+        EntityManagerInterface $em,
+        CategoryRepository $categoryRepository
+    ): Response {
+        $response = null;
+        $category = new Category();
+        $categoryForm = $this->createForm(CategoryType::class, $category);
+
+        $categoryForm->handleRequest($request);
+        if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
+            $em->persist($category);
+            $em->flush();
+
+            $response = new Response(null, Response::HTTP_CREATED);
+        }
+
         return $this->render('to_read/index.html.twig', [
-            'articles' => $articleRepository->findBy(['status' => $status]),
-            'tab' => $status
+            'form' => $categoryForm,
+            'articlesToSort' => $em->getRepository(Article::class)->findBy([
+                'category' => null
+            ]),
+            'categories' => $categoryRepository->findAll(),
+            'currentCategory' => $categoryRepository->find(1)
+        ], $response);
+    }
+
+    #[Route('/articles/{category}', name: 'articles_for_category')]
+    public function articlesByCategories(
+        Category $category,
+        CategoryRepository $categoryRepository
+    ): Response {
+        return $this->render('to_read/_tabs.html.twig', [
+            'currentCategory' => $category,
+            'categories' => $categoryRepository->findAll()
         ]);
     }
 
@@ -37,32 +71,10 @@ class ToReadController extends AbstractController
 
         $articleRepository->save($article, true);
 
-        return $this->render('to_read/index.html.twig', [
-            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
-            'tab' => Article::TO_READ
-        ]);
-    }
-
-    #[Route('/read/{id}', name: 'app_read_article')]
-    public function read(Article $article, ArticleRepository $articleRepository): Response
-    {
-        $article->status = Article::READ;
-        $articleRepository->save($article, true);
-
-        return $this->render('to_read/index.html.twig', [
-            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
-            'tab' => Article::TO_READ
-        ]);
-    }
-
-    #[Route('/delete/{id}', name:'app_delete_article')]
-    public function delete(Article $article, ArticleRepository $articleRepository): Response
-    {
-        $articleRepository->remove($article, true);
-
-        return $this->render('to_read/index.html.twig', [
-            'articles' => $articleRepository->findBy(['status' => Article::TO_READ]),
-            'tab' => Article::TO_READ
+        return $this->render('to_read/_articles_to_sort.html.twig', [
+            'articlesToSort' => $articleRepository->findBy([
+                'category' => null
+            ]),
         ]);
     }
 }

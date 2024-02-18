@@ -8,10 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
-    public const TO_READ = 1;
-    public const READ = 2;
-    public const ARCHIVED = 3;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,8 +26,8 @@ class Article
         #[ORM\Column(type: "text", nullable: true)]
         public string $description,
 
-        #[ORM\Column]
-        public int $status = self::TO_READ
+        #[ORM\ManyToOne(inversedBy: 'articles')]
+        public ?Category $category = null
     ) {}
 
     public function getId(): ?int
