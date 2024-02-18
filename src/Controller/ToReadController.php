@@ -40,7 +40,7 @@ class ToReadController extends AbstractController
                 'category' => null
             ]),
             'categories' => $categoryRepository->findAll(),
-            'currentCategory' => $categoryRepository->find(1)
+            'currentCategory' => $categoryRepository->find(17)
         ], $response);
     }
 
