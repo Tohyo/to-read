@@ -1,12 +1,19 @@
-<div{{ attributes }}>
-    <a href="{{ article.url }}" target="_blank" class="">
-        <div class="flex items-center">
+<div {{ attributes }}>
+    <div class="flex">
+        <a href="{{ article.url }}" target="_blank" class="flex items-center">
             <img src="{{ article.imageUrl }}" class="h-20" />
             <div>
                 <p>{{ article.title }}</p>
                 <p class="text-slate-400">{{ article.description }}</p>
-
             </div>
-        </div>
-    </a>
+        </a>
+        {{ form_start(form, { attr: {
+            'data-action': 'live#action',
+            'data-action-name': 'prevent|save'
+        }})  }}
+            {{ form_row(form.category) }}
+
+            <button>Save</button>
+        {{ form_end(form) }}
+    </div>
 </div>

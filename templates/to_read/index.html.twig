@@ -4,11 +4,11 @@
 
 {% block body %}
 <div data-controller="paste" class="p-8">
-        {{ include('to_read/_category_form.html.twig') }}
-        <div class="flex" data-paste-target="toSort">
-            {{ include('to_read/_articles_to_sort.html.twig') }}
-        </div>
-        {{ include('to_read/_tabs.html.twig') }}
-    </input>
+    {{ include('to_read/_category_form.html.twig') }}
+    <div data-paste-target="toSort">
+        {{ include('to_read/_articles_to_sort.html.twig') }}
+    </div>
+    {{ include('to_read/_tabs.html.twig') }}
+    {# </input> #}
 </div>
 {% endblock %}
