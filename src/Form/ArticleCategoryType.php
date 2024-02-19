@@ -16,7 +16,8 @@ class ArticleCategoryType extends AbstractType
         $builder
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
+                'placeholder' => 'Choisir une catégorie',
             ])
         ;
     }
