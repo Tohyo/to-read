@@ -3,12 +3,9 @@
 {% block title %}Articles à lire{% endblock %}
 
 {% block body %}
-<div data-controller="paste" class="p-8">
-    {{ include('to_read/_category_form.html.twig') }}
-    <div data-paste-target="toSort">
-        {{ include('to_read/_articles_to_sort.html.twig') }}
-    </div>
+<div class="p-8">
+    {{ include('to_read/_create_article_form.html.twig') }}
+    {# {{ include('to_read/_category_form.html.twig') }} #}
     {{ include('to_read/_tabs.html.twig') }}
-    {# </input> #}
 </div>
 {% endblock %}

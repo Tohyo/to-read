@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateArticleDto;
 use App\Entity\Article;
 use App\Entity\Category;
-use App\Form\CategoryType;
+use App\Form\CreateArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,22 +21,33 @@ class ToReadController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $em,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        ArticleRepository $articleRepository,
+        OpenGraph $openGraph
     ): Response {
         $response = null;
-        $category = new Category();
-        $categoryForm = $this->createForm(CategoryType::class, $category);
+        $articleDto = new CreateArticleDto();
+        $form = $this->createForm(CreateArticleType::class, $articleDto);
 
-        $categoryForm->handleRequest($request);
-        if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
-            $em->persist($category);
-            $em->flush();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $openGraphData = $openGraph->getData($articleDto->url);
+
+            $article = new Article(
+                $openGraphData->title ?? $articleDto->url,
+                $articleDto->url,
+                $openGraphData->image->url ?? '',
+                $openGraphData->description ?? '',
+                $articleDto->category
+            );
+
+            $articleRepository->save($article, true);
 
             $response = new Response(null, Response::HTTP_CREATED);
         }
 
         return $this->render('to_read/index.html.twig', [
-            'form' => $categoryForm,
+            'form' => $form,
             'articlesToSort' => $em->getRepository(Article::class)->findBy([
                 'category' => null
             ]),
@@ -52,29 +64,6 @@ class ToReadController extends AbstractController
         return $this->render('to_read/_tabs.html.twig', [
             'currentCategory' => $category,
             'categories' => $categoryRepository->findAll()
-        ]);
-    }
-
-    #[Route('/articles', name: 'app_to_read_articles', methods: ['POST'])]
-    public function pastes(Request $request, ArticleRepository $articleRepository, OpenGraph $openGraph): Response
-    {
-        $data = json_decode($request->getContent(), true);
-
-        $openGraphData = $openGraph->getData($data['url']);
-
-        $article = new Article(
-            $openGraphData->title ?? $data['url'],
-            $data['url'],
-            $openGraphData->image->url ?? '',
-            $openGraphData->description ?? ''
-        );
-
-        $articleRepository->save($article, true);
-
-        return $this->render('to_read/_articles_to_sort.html.twig', [
-            'articlesToSort' => $articleRepository->findBy([
-                'category' => null
-            ]),
         ]);
     }
 }
