@@ -3,9 +3,9 @@
 {% block title %}Articles à lire{% endblock %}
 
 {% block body %}
-<div class="p-8">
-    {{ include('to_read/_create_article_form.html.twig') }}
-    {# {{ include('to_read/_category_form.html.twig') }} #}
+<h1 class="mb-4 text-4xl font-extrabold text-gray-900 ">Articles à lire</h1>
+<div class="flex p-8">
     {{ include('to_read/_tabs.html.twig') }}
+    {{ include('to_read/_create_article_form.html.twig') }}
 </div>
 {% endblock %}
