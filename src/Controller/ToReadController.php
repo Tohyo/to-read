@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Dto\CreateArticleDto;
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Form\CategoryType;
 use App\Form\CreateArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
@@ -27,10 +28,13 @@ class ToReadController extends AbstractController
     ): Response {
         $response = null;
         $articleDto = new CreateArticleDto();
-        $form = $this->createForm(CreateArticleType::class, $articleDto);
+        $articleForm = $this->createForm(CreateArticleType::class, $articleDto);
 
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $category = new Category();
+        $categoryForm = $this->createForm(CategoryType::class, $category);
+
+        $articleForm->handleRequest($request);
+        if ($articleForm->isSubmitted() && $articleForm->isValid()) {
             $openGraphData = $openGraph->getData($articleDto->url);
 
             $article = new Article(
@@ -46,8 +50,17 @@ class ToReadController extends AbstractController
             $response = new Response(null, Response::HTTP_CREATED);
         }
 
+        $categoryForm->handleRequest($request);
+        if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
+            $em->persist($category);
+            $em->flush();
+
+            $response = new Response(null, Response::HTTP_CREATED);
+        }
+
         return $this->render('to_read/index.html.twig', [
-            'form' => $form,
+            'articleForm' => $articleForm,
+            'categoryForm' => $categoryForm,
             'articlesToSort' => $em->getRepository(Article::class)->findBy([
                 'category' => null
             ]),
